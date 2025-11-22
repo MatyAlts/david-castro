@@ -1,0 +1,86 @@
+// Prisma schema for production deployment
+// Supports both SQLite (development) and PostgreSQL (production)
+
+datasource db {
+	provider = "postgresql"
+	url      = env("DB_URL")
+}
+
+generator client {
+	provider = "prisma-client-js"
+}
+
+model User {
+	id    Int     @id @default(autoincrement())
+	email String  @unique
+	name  String?
+}
+
+model Customer {
+	id        String    @id @default(cuid())
+	name      String
+	phone     String?
+	email     String?
+	createdAt DateTime  @default(now())
+	updatedAt DateTime  @updatedAt
+
+	orders    Order[]
+	products  CustomProduct[]
+}
+
+model CustomProduct {
+	id           String   @id @default(cuid())
+	customerId   String?
+	internalName String
+	description  String?
+	measures     String?
+	paperType    String?
+	colors       String?
+	dieCut       String?
+	traceability String?
+	createdAt    DateTime @default(now())
+	updatedAt    DateTime @updatedAt
+
+	customer     Customer? @relation(fields: [customerId], references: [id])
+	orderItems   OrderItem[]
+}
+
+model Order {
+	id        String      @id @default(cuid())
+	customerId String
+	total     Float
+	balance   Float
+	paid      Boolean     @default(false)
+	status    String
+	notes     String?
+	orderDate DateTime    @default(now())
+	createdAt DateTime    @default(now())
+
+	customer  Customer    @relation(fields: [customerId], references: [id])
+	items     OrderItem[]
+	payments  Payment[]
+}
+
+model OrderItem {
+	id        String  @id @default(cuid())
+	orderId   String
+	productId String?
+	quantity  Int
+	unitPrice Float
+	subtotal  Float
+
+	order     Order    @relation(fields: [orderId], references: [id])
+	product   CustomProduct? @relation(fields: [productId], references: [id])
+}
+
+model Payment {
+	id              String   @id @default(cuid())
+	orderId         String
+	amount          Float
+	method          String
+	isDeferred      Boolean  @default(false)
+	accreditationDate DateTime?
+	paymentDate     DateTime @default(now())
+
+	order           Order    @relation(fields: [orderId], references: [id])
+}
