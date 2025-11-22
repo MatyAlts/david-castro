@@ -42,7 +42,6 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules",
-    "prisma.config.ts"
+    "node_modules"
   ]
 }
