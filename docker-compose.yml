@@ -40,7 +40,7 @@ services:
       timeout: 10s
       retries: 3
     ports:
-      - "3000:3000"
+      - "3000:80"
 
 volumes:
   postgres_data:
