@@ -1,0 +1,5 @@
+{
+  "name": "ImprentaManager MVP",
+  "description": "A mobile-first management system for printing shops, featuring customer tracking, custom product catalogs, order management, and financial tracking.",
+  "requestFramePermissions": []
+}

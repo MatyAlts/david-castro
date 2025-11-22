@@ -1,0 +1,16 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/clientes/route": "app/api/clientes/route.js",
+  "/api/orders/[id]/route": "app/api/orders/[id]/route.js",
+  "/api/orders/[id]/payment/route": "app/api/orders/[id]/payment/route.js",
+  "/api/orders/route": "app/api/orders/route.js",
+  "/api/products/route": "app/api/products/route.js",
+  "/pedidos/[id]/print/page": "app/pedidos/[id]/print/page.js",
+  "/clientes/page": "app/clientes/page.js",
+  "/pedidos/[id]/page": "app/pedidos/[id]/page.js",
+  "/pedidos/new/page": "app/pedidos/new/page.js",
+  "/presupuestos/page": "app/presupuestos/page.js",
+  "/productos/page": "app/productos/page.js",
+  "/page": "app/page.js",
+  "/pedidos/page": "app/pedidos/page.js"
+}
