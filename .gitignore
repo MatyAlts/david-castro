@@ -1,6 +1,10 @@
+.# Environment files (explicit)
 .env
+.env.local
+.env.*.local
+
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -8,18 +12,43 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Dependency directory
+node_modules/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Next.js build outputs
+.next/
+out/
+dist/
+dist-ssr/
+build/
+
+# Caches
+.next/cache/
+.cache/
+.parcel-cache/
+
+# Prisma generated files (client artifacts)
+.prisma/
+node_modules/.prisma/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Editor/IDE
+.vscode/
+!.vscode/extensions.json
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Misc
+.eslintcache
+*.tgz
+
+# Deployment
+.vercel/
+.now
