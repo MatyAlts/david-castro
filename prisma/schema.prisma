@@ -2,7 +2,8 @@
 // Default datasource uses SQLite for a simple local workflow.
 
 datasource db {
-	provider = "postgresql"
+	provider = "sqlite"
+	url      = "file:./dev.db"
 }
 
 generator client {

@@ -22,7 +22,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Generate Prisma Client with correct binary target
-RUN npx prisma generate
+RUN npx prisma generate --schema=./prisma/schema.production.prisma
 
 # Set environment variable for build
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -60,4 +60,4 @@ ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Run migrations and start the app
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.production.prisma && node server.js"]
