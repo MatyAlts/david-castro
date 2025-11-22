@@ -4,7 +4,7 @@ FROM node:20-alpine AS base
 # Install dependencies only when needed
 FROM base AS deps
 # Install OpenSSL 3 and compatibility libraries for Prisma
-RUN apk add --no-cache libc6-compat openssl-dev
+RUN apk add --no-cache libc6-compat openssl-dev openssl1.1-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -35,8 +35,7 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-# Install OpenSSL for runtime
-RUN apk add --no-cache openssl-dev
+RUN apk add --no-cache openssl-dev openssl1.1-compat
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
