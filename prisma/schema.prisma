@@ -2,8 +2,7 @@
 // Default datasource uses SQLite for a simple local workflow.
 
 datasource db {
-	provider = "sqlite"
-	url      = env("DB_URL")
+	provider = "postgresql"
 }
 
 generator client {
