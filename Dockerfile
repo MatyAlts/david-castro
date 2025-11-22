@@ -1,10 +1,10 @@
 # Dockerfile para Imprenta Manager - Next.js App
-FROM node:20-alpine AS base
+FROM node:20-bullseye-slim AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Install OpenSSL 3 and compatibility libraries for Prisma
-RUN apk add --no-cache libc6-compat openssl-dev openssl1.1-compat
+# Install OpenSSL for Prisma
+RUN apt-get update && apt-get install -y openssl libssl-dev
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -16,7 +16,7 @@ FROM base AS builder
 WORKDIR /app
 
 # Install OpenSSL for Prisma
-RUN apk add --no-cache openssl-dev
+RUN apt-get update && apt-get install -y openssl libssl-dev
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -35,7 +35,7 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-RUN apk add --no-cache openssl-dev openssl1.1-compat
+RUN apt-get update && apt-get install -y openssl libssl-dev
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
