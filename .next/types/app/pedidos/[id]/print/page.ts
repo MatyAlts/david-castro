@@ -1,4 +1,4 @@
-// File: C:\Proyectos\Imprenta\app\pedidos\[id]\print\page.tsx
+// File: C:\Proyectos\Codex-projects\david-castro\app\pedidos\[id]\print\page.tsx
 import * as entry from '../../../../../../app/pedidos/[id]/print/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

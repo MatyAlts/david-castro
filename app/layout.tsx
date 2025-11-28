@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import "./globals.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, Package, ShoppingCart, Menu, Calculator, X, FileText } from "lucide-react";
+import { Home, Users, Package, ShoppingCart, Menu, Calculator, X, FileText, Settings } from "lucide-react";
 
 export default function RootLayout({
   children,
@@ -20,6 +20,7 @@ export default function RootLayout({
     { href: "/clientes", icon: Users, label: "Clientes", shortLabel: "Clientes" },
     { href: "/productos", icon: Package, label: "Productos", shortLabel: "Prods" },
     { href: "/presupuestos", icon: Calculator, label: "Presupuestos", shortLabel: "Presu" },
+    { href: "/configuracion", icon: Settings, label: "Configuración", shortLabel: "Config" },
   ];
 
   const isActive = (href: string) => pathname === href;
@@ -32,7 +33,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-slate-50 to-slate-100">
         {/* Mobile Header */}
-        <header className="md:hidden bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg">
+        <header className="md:hidden bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex justify-between items-center sticky top-0 z-50 shadow-lg no-print">
           <div className="flex items-center gap-2">
             <FileText className="w-6 h-6" />
             <span className="font-bold text-lg">Imprenta</span>
@@ -50,7 +51,7 @@ export default function RootLayout({
         {mobileMenuOpen && (
           <div className="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300" onClick={() => setMobileMenuOpen(false)}>
             <nav 
-              className="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl transform transition-transform duration-300"
+              className="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl transform transition-transform duration-300 no-print"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6 border-b border-slate-200">
@@ -82,7 +83,7 @@ export default function RootLayout({
         )}
 
         {/* Sidebar Navigation (Desktop) */}
-        <nav className="hidden md:block bg-gradient-to-b from-slate-900 to-slate-800 text-slate-300 w-64 min-h-screen flex-shrink-0 shadow-xl">
+        <nav className="hidden md:block bg-gradient-to-b from-slate-900 to-slate-800 text-slate-300 w-64 min-h-screen flex-shrink-0 shadow-xl no-print">
           <div className="p-6 border-b border-slate-700">
             <div className="flex items-center gap-3 text-white">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
@@ -120,7 +121,7 @@ export default function RootLayout({
         </nav>
 
         {/* Mobile Nav Bottom Bar */}
-        <nav className="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-200 flex justify-around py-2 z-50 shadow-lg">
+        <nav className="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-200 flex justify-around py-2 z-50 shadow-lg no-print">
           {navItems.slice(0, 4).map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);

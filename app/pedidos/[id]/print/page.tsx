@@ -8,15 +8,15 @@ export default async function PrintOrderPage({ params }: { params: { id: string 
   const order = await prisma.order.findUnique({
     where: { id: params.id },
     include: {
-        customer: true,
-        items: { include: { product: true } }
+      customer: true,
+      items: { include: { product: { include: { paperType: true, matrixSize: true } } } },
     }
   });
 
   if (!order) notFound();
 
   return (
-    <div className="bg-white min-h-screen p-8 max-w-3xl mx-auto">
+    <div className="bg-white min-h-screen p-8 max-w-3xl mx-auto print-surface">
         {/* Print Helper */}
         <div className="no-print mb-4 flex justify-between items-center bg-blue-50 p-4 rounded border border-blue-200">
             <span className="text-blue-800 text-sm">Vista de impresión (Técnica)</span>
@@ -58,17 +58,19 @@ export default async function PrintOrderPage({ params }: { params: { id: string 
                         <tr key={item.id} className="border-b border-gray-300">
                             <td className="py-4 text-center font-black text-xl align-top">{item.quantity}</td>
                             <td className="py-4 px-4 align-top">
-                                <p className="font-bold text-lg">{item.product.internalName}</p>
-                                <p className="text-gray-600 mt-1">{item.product.description}</p>
+                                <p className="font-bold text-lg">{item.product?.internalName || "Producto"}</p>
+                                {item.product?.description && (
+                                  <p className="text-gray-600 mt-1">{item.product.description}</p>
+                                )}
                             </td>
-                            <td className="py-4 px-4 align-top space-y-1">
-                                {item.product.measures && <p><strong>Medidas:</strong> {item.product.measures}</p>}
-                                {item.product.paperType && <p><strong>Papel:</strong> {item.product.paperType}</p>}
-                                {item.product.colors && <p><strong>Colores:</strong> {item.product.colors}</p>}
-                                {item.product.dieCut && <p><strong>Troquel:</strong> {item.product.dieCut}</p>}
-                                {item.product.traceability && <p><strong>Rampa:</strong> {item.product.traceability}</p>}
-                            </td>
-                        </tr>
+                    <td className="py-4 px-4 align-top space-y-1">
+                                {item.product?.measures && <p><strong>Medidas:</strong> {item.product.measures}</p>}
+                                {item.product?.paperType?.name && <p><strong>Papel:</strong> {item.product.paperType.name}</p>}
+                                {item.product?.matrixSize?.name && <p><strong>Matriz:</strong> {item.product.matrixSize.name}</p>}
+                                {item.product?.colors && <p><strong>Colores:</strong> {item.product.colors}</p>}
+                                {item.product?.observations && <p><strong>Obs:</strong> {item.product.observations}</p>}
+                    </td>
+                </tr>
                     ))}
                 </tbody>
             </table>

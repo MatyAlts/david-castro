@@ -85,8 +85,27 @@
   .no-print {
     display: none !important;
   }
+  header, nav {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
   body {
     background: white;
+    margin: 0 !important;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+  a[href]:after {
+    content: "" !important; /* evita que los navegadores impriman la URL */
+  }
+  .print-surface {
+    padding: 18mm 16mm;
   }
 }
 

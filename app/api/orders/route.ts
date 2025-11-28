@@ -4,7 +4,12 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { customerId, items, total, notes } = body;
+    const { customerId, items, notes, quoteId } = body;
+
+    const totalCalculated = (items || []).reduce(
+      (sum: number, item: any) => sum + Number(item.quantity) * Number(item.price),
+      0
+    );
 
     // Transaction to create Order and OrderItems
     const order = await prisma.$transaction(async (tx) => {
@@ -12,11 +17,12 @@ export async function POST(req: Request) {
       const newOrder = await tx.order.create({
         data: {
           customerId,
-          total,
-          balance: total, // Initial balance = total
+          quoteId,
+          total: totalCalculated,
+          balance: totalCalculated, // Initial balance = total
           notes,
-          status: 'SOLICITADO'
-        }
+          status: "SOLICITADO",
+        },
       });
 
       // 2. Create Items
@@ -27,10 +33,18 @@ export async function POST(req: Request) {
             productId: item.productId,
             quantity: item.quantity,
             unitPrice: item.price,
-            subtotal: item.quantity * item.price
-          }
+            subtotal: item.quantity * item.price,
+          },
         });
       }
+
+      // 3. Register initial status change
+      await tx.orderStatusHistory.create({
+        data: {
+          orderId: newOrder.id,
+          status: "SOLICITADO",
+        },
+      });
 
       return newOrder;
     });

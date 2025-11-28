@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Printer, CreditCard, Save, ArrowLeft, Plus, Package, DollarSign, CheckCircle } from 'lucide-react';
+import { Printer, Save, ArrowLeft, Plus, Package, DollarSign, CheckCircle, AlertTriangle, Clock, FileText } from 'lucide-react';
 import { useParams } from 'next/navigation';
 
 export default function OrderDetailPage() {
@@ -85,7 +85,7 @@ export default function OrderDetailPage() {
 
       {/* Header Card */}
       <div className="card p-6 mb-6">
-        <div className="flex flex-col lg:flex-row justify-between gap-6">
+          <div className="flex flex-col lg:flex-row justify-between gap-6">
           <div className="flex-1">
             <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
               {order.customer.name}
@@ -94,10 +94,19 @@ export default function OrderDetailPage() {
               <span>📅 {new Date(order.orderDate).toLocaleDateString('es-AR', { 
                 day: '2-digit', 
                 month: 'long', 
-                year: 'numeric' 
-              })}</span>
+              year: 'numeric' 
+            })}</span>
               <span className="font-semibold">💵 Total: ${order.total.toLocaleString()}</span>
             </div>
+            {order.quoteId && (
+              <Link
+                href={`/presupuestos/${order.quoteId}`}
+                className="inline-flex items-center gap-2 text-sm text-blue-600 mt-2"
+              >
+                <FileText className="w-4 h-4" />
+                Ver presupuesto origen
+              </Link>
+            )}
           </div>
           
           <div className="flex flex-col gap-3">
@@ -146,14 +155,17 @@ export default function OrderDetailPage() {
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
                     <h4 className="font-bold text-lg text-slate-800 mb-1">
-                      {item.product.internalName}
+                      {item.product?.internalName || "Producto"}
                     </h4>
                     <div className="space-y-1 text-sm text-slate-600">
-                      {item.product.measures && (
+                      {item.product?.measures && (
                         <p>📏 {item.product.measures}</p>
                       )}
-                      {item.product.paperType && (
-                        <p>📄 {item.product.paperType}</p>
+                      {(item.product?.paperType || item.product?.matrixSize) && (
+                        <p>
+                          {item.product.paperType?.name ? `📄 ${item.product.paperType.name}` : null}
+                          {item.product.matrixSize?.name ? ` · Matriz ${item.product.matrixSize.name}` : ""}
+                        </p>
                       )}
                       <p className="font-semibold text-slate-700">
                         Cantidad: {item.quantity.toLocaleString()} unidades
@@ -265,6 +277,34 @@ export default function OrderDetailPage() {
               </div>
             )}
           </div>
+
+          {/* Status history */}
+          <div className="card p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Clock className="w-5 h-5 text-slate-500" />
+              <h3 className="font-bold text-lg text-slate-800">Historial de estado</h3>
+            </div>
+            {order.statusLogs && order.statusLogs.length > 0 ? (
+              <div className="space-y-2">
+                {order.statusLogs.map((log: any) => (
+                  <div key={log.id} className="flex items-center justify-between text-sm bg-slate-50 px-3 py-2 rounded-lg">
+                    <span className="font-medium text-slate-700">{log.status.replace('_', ' ')}</span>
+                    <span className="text-slate-500">
+                      {new Date(log.changedAt).toLocaleString('es-AR', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500">Sin cambios registrados</p>
+            )}
+          </div>
         </div>
 
         {/* Balance Card - Sidebar */}
@@ -273,6 +313,13 @@ export default function OrderDetailPage() {
             <h3 className="text-slate-600 text-sm font-bold uppercase tracking-wide mb-6">
               Resumen Financiero
             </h3>
+
+            {order.status === 'ENTREGADO' && order.balance > 0 && (
+              <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center gap-2 text-sm">
+                <AlertTriangle className="w-4 h-4" />
+                Pedido entregado con saldo pendiente
+              </div>
+            )}
             
             <div className="space-y-4 mb-6">
               <div className="flex justify-between items-center pb-3 border-b border-slate-200">

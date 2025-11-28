@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Trash2, Plus, ArrowLeft, ShoppingCart, User, Package, FileText } from 'lucide-react';
 
 type Product = { id: string; internalName: string; measures: string };
@@ -10,6 +10,7 @@ type OrderItemDraft = { productId: string; quantity: number; price: number };
 
 export default function NewOrderPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [customers, setCustomers] = useState<{id:string, name:string}[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState('');
   const [customerProducts, setCustomerProducts] = useState<Product[]>([]);
@@ -20,6 +21,13 @@ export default function NewOrderPage() {
   useEffect(() => {
     fetch('/api/clientes').then(r => r.json()).then(setCustomers);
   }, []);
+
+  useEffect(() => {
+    const preselected = searchParams.get('cliente');
+    if (preselected) {
+      setSelectedCustomer(preselected);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (selectedCustomer) {
